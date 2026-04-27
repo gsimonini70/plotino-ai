@@ -64,3 +64,10 @@ La configurazione è salvata nel **browser** (`localStorage`), non sul server.
 | Pagina bianca / fetch bloccato | Apri l’app via `http://127.0.0.1:…` dal `start.sh`, non come file `file://`. |
 | Pubblicazione errore | Token social corretti in `plotino.env`? Piattaforma supportata dal bridge? |
 | Hashtag strani in modalità locale | Prova a essere più specifico nell’argomento; in IA i tag sono guidati dal modello. |
+
+---
+
+## Vedi anche
+
+- [FAQ.md](FAQ.md) — altre domande ricorrenti (file locale vs server, chiavi, modelli self-hosted).
+- [DIAGRAMS.md](DIAGRAMS.md) — flussi visualizzati (generazione e pubblicazione).

@@ -125,3 +125,10 @@ Estendere il bridge aggiungendo funzioni handler e voci in `HANDLERS`.
 
 - Python: dipendenze solo dalla libreria standard per il bridge (urllib, ssl, http.server).
 - Browser: ES2017+ consigliato (async/await, fetch).
+
+---
+
+## Vedi anche
+
+- [FAQ.md](FAQ.md) — dettagli operativi su chiavi, costi IA e compatibilità browser.
+- [DIAGRAMS.md](DIAGRAMS.md) — diagrammi di sequenza generate/publish e configurazione.

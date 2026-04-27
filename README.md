@@ -26,6 +26,8 @@ Variabili utili: `HTTP_PORT`, `BRIDGE_PORT`, `SKIP_BRIDGE=1`, `OPEN_BROWSER=0`.
 |-----------|-----------|
 | [docs/USER.md](docs/USER.md) | Guida utente: interfaccia, IA, pubblicazione, impostazioni |
 | [docs/TECHNICAL.md](docs/TECHNICAL.md) | Architettura, API del bridge, estensioni e sicurezza |
+| [docs/FAQ.md](docs/FAQ.md) | FAQ: `file://`, chiavi, costi, piattaforme, reset |
+| [docs/DIAGRAMS.md](docs/DIAGRAMS.md) | Diagrammi Mermaid (generazione IA, pubblicazione, config) |
 
 ## Repository
 
