@@ -11,7 +11,7 @@ sequenceDiagram
     participant U as Utente
     participant B as Browser (app.js)
     participant S as Bridge Python
-    participant L as Provider IA<br/>(OpenAI / Anthropic / compat.)
+    participant L as Provider IA
 
     U->>B: Argomento + checkbox piattaforme
     U->>B: Clic «Genera con IA»
@@ -32,7 +32,7 @@ sequenceDiagram
     participant U as Utente
     participant B as Browser
     participant S as Bridge Python
-    participant N as Reti social<br/>(API esterne)
+    participant N as API social esterne
 
     U->>B: Clic «Vai»
     B->>B: Costruisce posts (+ media base64)
