@@ -411,6 +411,148 @@ def run_ai_generation(data: Dict[str, Any]) -> Dict[str, Any]:
     return {"ok": True, "posts": out_posts}
 
 
+ANTHROPIC_FALLBACK_MODELS = [
+    "claude-sonnet-4-20250514",
+    "claude-3-5-sonnet-20241022",
+    "claude-3-5-haiku-20241022",
+]
+
+
+def _extract_model_ids_from_payload(payload: Any) -> List[str]:
+    if not isinstance(payload, dict):
+        return []
+    data = payload.get("data")
+    if not isinstance(data, list):
+        return []
+    out: List[str] = []
+    for item in data:
+        if isinstance(item, dict):
+            mid = item.get("id") or item.get("model") or item.get("name")
+            if mid:
+                out.append(str(mid))
+    return out
+
+
+def _openai_like_chat_model_id(mid: str) -> bool:
+    m = mid.lower()
+    bad = (
+        "embed",
+        "whisper",
+        "dall-e",
+        "tts",
+        "moderation",
+        "davinci",
+        "babbage",
+        "ada-",
+        "text-embedding",
+        "audio",
+        "realtime",
+        "-embedding",
+    )
+    if any(b in m for b in bad):
+        return False
+    return (
+        m.startswith("gpt-")
+        or m.startswith("o1")
+        or m.startswith("o3")
+        or m.startswith("chatgpt-")
+        or m.startswith("ft:")
+    )
+
+
+def _anthropic_chat_model_id(mid: str) -> bool:
+    m = mid.lower()
+    if "embed" in m:
+        return False
+    return m.startswith("claude-")
+
+
+def list_models_openai_compatible(base: str, api_key: str) -> List[str]:
+    url = base.rstrip("/") + "/models"
+    req = Request(url, headers={"Authorization": f"Bearer {api_key}"})
+    with urlopen(req, timeout=90, context=ssl.create_default_context()) as resp:
+        raw = resp.read().decode("utf-8")
+    payload = json.loads(raw)
+    ids = _extract_model_ids_from_payload(payload)
+    out = [i for i in ids if _openai_like_chat_model_id(i)]
+    if not out:
+        out = ids[:]
+    return sorted(set(out))
+
+
+def list_models_anthropic(api_key: str) -> List[str]:
+    url = "https://api.anthropic.com/v1/models"
+    req = Request(
+        url,
+        headers={
+            "x-api-key": api_key,
+            "anthropic-version": "2023-06-01",
+        },
+    )
+    with urlopen(req, timeout=90, context=ssl.create_default_context()) as resp:
+        raw = resp.read().decode("utf-8")
+    payload = json.loads(raw)
+    ids = _extract_model_ids_from_payload(payload)
+    out = [i for i in ids if _anthropic_chat_model_id(i)]
+    if not out:
+        out = sorted(set(ids))
+    return sorted(set(out))
+
+
+def run_list_ai_models(data: Dict[str, Any]) -> Dict[str, Any]:
+    provider = (data.get("provider") or "openai").strip().lower()
+    api_key_body = (data.get("api_key") or "").strip()
+    base_url_body = (data.get("base_url") or "").strip().rstrip("/")
+
+    if provider in ("openai", "openai_compatible"):
+        key = api_key_body or _env("OPENAI_API_KEY")
+        if not key:
+            return {"ok": False, "error": "Chiave API OpenAI mancante (form o OPENAI_API_KEY)", "models": []}
+        base = base_url_body or _env("OPENAI_BASE_URL") or "https://api.openai.com/v1"
+        try:
+            models = list_models_openai_compatible(base, key)
+            return {"ok": True, "models": models, "source": "api"}
+        except HTTPError as e:
+            err = e.read().decode("utf-8", errors="replace")[:600]
+            return {"ok": False, "error": f"HTTP {e.code}: {err}", "models": []}
+        except URLError as e:
+            return {"ok": False, "error": str(e.reason), "models": []}
+        except Exception as e:
+            return {"ok": False, "error": str(e), "models": []}
+
+    if provider == "anthropic":
+        key = api_key_body or _env("ANTHROPIC_API_KEY")
+        if not key:
+            return {"ok": False, "error": "Chiave Anthropic mancante", "models": []}
+        try:
+            models = list_models_anthropic(key)
+            return {"ok": True, "models": models, "source": "api"}
+        except HTTPError as e:
+            err = e.read().decode("utf-8", errors="replace")[:400]
+            return {
+                "ok": True,
+                "models": ANTHROPIC_FALLBACK_MODELS,
+                "source": "fallback",
+                "warning": f"Lista API non disponibile (HTTP {e.code}). Usa modelli noti o verifica chiave. {err}",
+            }
+        except URLError as e:
+            return {
+                "ok": True,
+                "models": ANTHROPIC_FALLBACK_MODELS,
+                "source": "fallback",
+                "warning": str(e.reason),
+            }
+        except Exception as e:
+            return {
+                "ok": True,
+                "models": ANTHROPIC_FALLBACK_MODELS,
+                "source": "fallback",
+                "warning": str(e),
+            }
+
+    return {"ok": False, "error": "provider non supportato per elenco modelli", "models": []}
+
+
 HANDLERS: Dict[str, Any] = {
     "x": publish_x,
     "facebook": publish_facebook,
@@ -452,6 +594,12 @@ class Handler(BaseHTTPRequestHandler):
             _json_response(self, status, result)
             return
 
+        if self.path == "/ai-models":
+            result = run_list_ai_models(data)
+            status = 200 if result.get("ok") else 400
+            _json_response(self, status, result)
+            return
+
         if self.path != "/publish":
             _json_response(self, 404, {"ok": False, "error": "not found"})
             return
@@ -485,7 +633,7 @@ def main() -> None:
     port = int(os.environ.get("BIND_PORT", "8787"))
     httpd = HTTPServer((host, port), Handler)
     print(
-        f"Plotino bridge su http://{host}:{port}  (POST /publish, POST /generate)",
+        f"Plotino bridge su http://{host}:{port}  (POST /publish, /generate, /ai-models)",
         file=sys.stderr,
     )
     httpd.serve_forever()

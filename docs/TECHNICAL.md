@@ -73,6 +73,14 @@ Generazione testi tramite LLM (OpenAI Chat Completions o Anthropic Messages).
 
 Implementazione: prompt di sistema in italiano che impone JSON `{ "posts": { ... } }`. OpenAI usa `response_format: json_object` quando `provider === openai"`; in caso di errore HTTP 400 può essere ritentato senza JSON mode. Il contenuto viene parsato con stripping eventuale fence markdown.
 
+### `POST /ai-models`
+
+Elenco modelli chat disponibili sul provider (usato dalla pagina Impostazioni).
+
+**Body:** `provider` (`openai`, `openai_compatible`, `anthropic`), opzionali `api_key`, `base_url`, `secret`.
+
+**Risposta:** `{ "ok": true, "models": ["…"], "source": "api"|"fallback", "warning"? }`. Per OpenAI-compat: `GET …/models` con filtro euristico su id «chat»; Anthropic: `GET https://api.anthropic.com/v1/models` oppure fallback interno se la richiesta fallisce.
+
 ### `POST /publish`
 
 Invio effettivo ai social (dove implementato).

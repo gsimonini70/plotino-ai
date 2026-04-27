@@ -54,8 +54,20 @@
           <option value="anthropic">Anthropic Claude</option>
         </select>
 
-        <label class="field-label" for="ai-model">Modello</label>
-        <input type="text" id="ai-model" class="input-text" placeholder="gpt-4o-mini · claude-sonnet-4-20250514 …" autocomplete="off" />
+        <label class="field-label" for="ai-model-select">Modello</label>
+        <div class="model-picker">
+          <select id="ai-model-select" class="input-text input-select" aria-describedby="ai-models-hint"></select>
+          <button type="button" class="btn ghost btn-small" id="ai-models-refresh">Aggiorna dall’API</button>
+        </div>
+        <input
+          type="text"
+          id="ai-model-custom"
+          class="input-text model-custom is-hidden"
+          placeholder="ID modello personalizzato (se scegli «Altro»)"
+          autocomplete="off"
+          aria-label="Modello personalizzato"
+        />
+        <p id="ai-models-hint" class="hint hint-tight"></p>
 
         <label class="field-label" for="ai-base-url">URL base API (solo compatibile OpenAI)</label>
         <input
