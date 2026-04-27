@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plotino — Impostazioni pubblicazione</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header header-row">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div>
+            <h1>Impostazioni</h1>
+            <p class="tagline">Bridge di pubblicazione e stato delle piattaforme</p>
+          </div>
+        </div>
+        <nav class="nav-links">
+          <a href="index.html">← Torna al concentratore</a>
+        </nav>
+      </header>
+
+      <form id="settings-form" class="panel settings-panel">
+        <h2>Bridge di pubblicazione</h2>
+        <p class="hint">
+          Il pulsante «Vai» invia testo e media (immagini/video in base64) al server locale (<code>bridge/publish_server.py</code>)
+          che usa token memorizzati come variabili d’ambiente — non nel browser.
+          Configura URL e chiave qui; copia la stessa chiave nella variabile <code>PUBLISH_SECRET</code> del bridge.
+        </p>
+
+        <label class="field-label" for="bridge-url">URL base del bridge</label>
+        <input type="url" id="bridge-url" class="input-text" placeholder="http://127.0.0.1:8787" autocomplete="off" />
+
+        <label class="field-label" for="bridge-secret">Chiave condivisa (opzionale)</label>
+        <input type="password" id="bridge-secret" class="input-text" placeholder="Stessa chiave del bridge" autocomplete="off" />
+
+        <h2 class="settings-h2">Intelligenza artificiale (generazione post)</h2>
+        <p class="hint">
+          «Genera con IA» chiama <code>POST /generate</code> sullo stesso bridge. Il modello viene eseguito dal bridge con la chiave qui sotto
+          <strong>oppure</strong> con variabili d’ambiente (<code>OPENAI_API_KEY</code>, <code>ANTHROPIC_API_KEY</code> in <code>plotino.env</code>) affinché la chiave non resti solo nel browser.
+        </p>
+
+        <label class="field-label" for="ai-provider">Provider</label>
+        <select id="ai-provider" class="input-text input-select">
+          <option value="openai">OpenAI (API ufficiale)</option>
+          <option value="openai_compatible">Compatibile OpenAI (DeepSeek, LM Studio, Groq…)</option>
+          <option value="anthropic">Anthropic Claude</option>
+        </select>
+
+        <label class="field-label" for="ai-model">Modello</label>
+        <input type="text" id="ai-model" class="input-text" placeholder="gpt-4o-mini · claude-sonnet-4-20250514 …" autocomplete="off" />
+
+        <label class="field-label" for="ai-base-url">URL base API (solo compatibile OpenAI)</label>
+        <input
+          type="url"
+          id="ai-base-url"
+          class="input-text"
+          placeholder="https://api.openai.com/v1 — oppure il tuo endpoint /v1"
+          autocomplete="off"
+        />
+
+        <label class="field-label" for="ai-api-key">Chiave API (opzionale se sul bridge)</label>
+        <input type="password" id="ai-api-key" class="input-text" placeholder="sk-… — lasciare vuoto per usare solo plotino.env sul server" autocomplete="off" />
+
+        <h2 class="settings-h2">Variabili sul bridge (riferimento)</h2>
+        <p class="hint mono-block">
+          <span class="mono-line">PUBLISH_SECRET</span>
+          <span class="mono-line">X_BEARER_TOKEN · OAuth 2 Bearer utente con scope tweet.write</span>
+          <span class="mono-line">FACEBOOK_PAGE_ACCESS_TOKEN · FACEBOOK_PAGE_ID</span>
+          <span class="mono-line">LINKEDIN_ACCESS_TOKEN · LINKEDIN_AUTHOR_URN (es. urn:li:person:…)</span>
+          <span class="mono-line">INSTAGRAM_ACCESS_TOKEN · INSTAGRAM_ACCOUNT_ID (Meta Graph)</span>
+          <span class="mono-line">TIKTOK_ACCESS_TOKEN (Content Posting API — beta)</span>
+          <span class="mono-line">YOUTUBE_* — upload/resumable richiede OAuth Google Cloud / Data API (stub sul bridge)</span>
+          <span class="mono-line">OPENAI_API_KEY · AI_MODEL — generazione IA (alternativa: chiave nel form sopra)</span>
+          <span class="mono-line">ANTHROPIC_API_KEY — se scegli Claude nel form Provider</span>
+          <span class="mono-line">OPENAI_BASE_URL — override endpoint compatibile OpenAI</span>
+        </p>
+
+        <h2 class="settings-h2">Piattaforme da poter pubblicare</h2>
+        <p class="hint">
+          Abilita solo i canali per cui hai configurato il bridge. La selezione effettiva avviene nel concentratore.
+        </p>
+
+        <div id="platform-toggles" class="platform-toggles-settings"></div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-upload">Salva impostazioni</button>
+          <span id="save-msg" class="save-msg" aria-live="polite"></span>
+        </div>
+      </form>
+
+      <footer class="footer">
+        <span>
+          Bridge e URL sono salvati in locale. La chiave IA nel form è opzionale; preferisci <code>plotino.env</code> sul bridge per non salvare segreti nel browser.
+        </span>
+      </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="settings.js" defer></script>
+  </body>
+</html>

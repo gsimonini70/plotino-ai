@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plotino — Concentratore social</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header header-row">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <div>
+            <h1>Plotino</h1>
+            <p class="tagline">Una pagina per testo e foto — post ottimizzati per ogni rete</p>
+          </div>
+        </div>
+        <nav class="nav-links">
+          <a href="settings.html">Impostazioni</a>
+        </nav>
+      </header>
+
+      <main class="layout">
+        <section class="panel concentratore" aria-labelledby="conc-title">
+          <h2 id="conc-title">Concentratore</h2>
+          <p class="hint">
+            Descrivi l’<strong>argomento</strong> (anche in bullet): l’IA sul bridge genera post e hashtag per le piattaforme selezionate a destra.
+            Puoi anche usare solo l’adattamento locale senza IA. Media: immagini / video come prima.
+          </p>
+
+          <label class="field-label" for="source-text">Argomento o brief</label>
+          <textarea
+            id="source-text"
+            class="source-text"
+            rows="10"
+            placeholder="Es: Lancio prodotto eco — disponibilità 1° maggio, tone of voice autorevole ma accessibile. Pubblico: founder e PMI attente al budget."
+          ></textarea>
+
+          <div class="toolbar toolbar-ai">
+            <button type="button" class="btn-ai" id="btn-generate-ai">Genera con IA</button>
+            <button type="button" class="btn ghost btn-small" id="btn-local-only" title="Ignora testo IA e usa solo le regole Plotino sull’argomento">
+              Adattamento locale
+            </button>
+          </div>
+
+          <div class="toolbar">
+            <label class="btn-upload">
+              <input type="file" id="photo-input" accept="image/*,video/*" multiple hidden />
+              <span class="btn-icon">＋</span>
+              Aggiungi foto o video
+            </label>
+            <button type="button" class="btn ghost" id="clear-photos" disabled>Rimuovi media</button>
+          </div>
+
+          <div id="gallery" class="gallery" aria-live="polite"></div>
+        </section>
+
+        <section class="panel outputs" aria-labelledby="out-title">
+          <div class="outputs-head">
+            <h2 id="out-title">Post ottimizzati</h2>
+            <p class="hint">
+              Seleziona le piattaforme. «Genera con IA» usa provider e modello da Impostazioni. «Vai» pubblica sul bridge.
+            </p>
+          </div>
+
+          <fieldset class="platform-fieldset">
+            <legend class="field-label">Piattaforme</legend>
+            <div class="platform-actions">
+              <button type="button" class="btn ghost btn-small" id="select-all-platforms">Tutte</button>
+              <button type="button" class="btn ghost btn-small" id="select-none-platforms">Nessuna</button>
+            </div>
+            <div id="platform-checkboxes" class="platform-checkboxes"></div>
+          </fieldset>
+
+          <div class="publish-bar">
+            <button type="button" class="btn-vai" id="btn-vai">Vai</button>
+            <span id="publish-hint" class="publish-hint"></span>
+          </div>
+
+          <div id="platform-panels"></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>Anteprima locale; pubblicazione verso il bridge definito in Impostazioni.</span>
+      </footer>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal">
+        <h3 id="modal-title">Esito pubblicazione</h3>
+        <div id="modal-body" class="modal-body"></div>
+        <button type="button" class="btn ghost modal-close" id="modal-close">Chiudi</button>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>
