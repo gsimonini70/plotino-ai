@@ -549,6 +549,12 @@ function buildPlatformPanels() {
     card.className = "platform-card hidden";
     card.dataset.platformPanel = key;
 
+    var heading = document.createElement("h3");
+    heading.className = "platform-card-heading";
+    heading.id = "panel-heading-" + key;
+    heading.textContent = r.title;
+    card.setAttribute("aria-labelledby", heading.id);
+
     var meta = document.createElement("div");
     meta.className = "meta-row";
     var badge = document.createElement("span");
@@ -609,6 +615,7 @@ function buildPlatformPanels() {
     tips.className = "tips";
     tips.setAttribute("data-tips", key);
 
+    card.appendChild(heading);
     card.appendChild(meta);
     card.appendChild(photoNote);
     card.appendChild(copyRow);
