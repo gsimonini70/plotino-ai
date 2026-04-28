@@ -7,13 +7,14 @@ Browser (SPA statica)          Bridge Python (localhost)
 ─────────────────────          ─────────────────────────
 index.html / app.js    ─HTTP──► POST /publish
 config in localStorage         POST /generate
+settings.js                    POST /ai-models
                                Env: token social + IA
 ```
 
 - **Frontend**: HTML/CSS/JS senza build step. Stato UI e configurazione in **`localStorage`** (chiave `plotino-config-v1`). Selezione piattaforme salvata in `plotino-selection-v1`.
 - **Bridge**: un solo processo `bridge/publish_server.py` (`http.server` standard library), endpoint **REST JSON** con CORS permissivo per sviluppo locale.
 
-Non c è backend applicativo oltre al bridge: tutta la logica «smart» lato client o nei handler Python.
+Non c'è backend applicativo oltre al bridge: tutta la logica «smart» lato client o nei handler Python.
 
 ---
 
@@ -22,9 +23,9 @@ Non c è backend applicativo oltre al bridge: tutta la logica «smart» lato cli
 | Percorso | Ruolo |
 |----------|--------|
 | `index.html` | Shell pagina principale |
-| `app.js` | UI, ricette per rete, hashtag profilati, cache testi IA (`aiPosts`), chiamate `/publish` e `/generate` |
+| `app.js` | UI, ricette per rete, intestazioni scheda per social (`platform-card-heading`), hashtag profilati, cache testi IA (`aiPosts`), chiamate `/publish` e `/generate` |
 | `config.js` | Load/save configurazione di default + merge |
-| `settings.html` / `settings.js` | Form bridge + IA + toggle piattaforme |
+| `settings.html` / `settings.js` | Form bridge + IA (menu modelli per provider, `POST /ai-models`) + toggle piattaforme |
 | `styles.css` | Stili |
 | `start.sh` | Carica `plotino.env`, avvia bridge + `python -m http.server` |
 | `bridge/publish_server.py` | Pubblicazione social + proxy IA |
@@ -71,7 +72,7 @@ Generazione testi tramite LLM (OpenAI Chat Completions o Anthropic Messages).
 
 **Chiavi IA sul server** (se `api_key` nel body è vuota): `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, opzionali `AI_MODEL`, `OPENAI_BASE_URL`, `AI_PROVIDER`.
 
-Implementazione: prompt di sistema in italiano che impone JSON `{ "posts": { ... } }`. OpenAI usa `response_format: json_object` quando `provider === openai"`; in caso di errore HTTP 400 può essere ritentato senza JSON mode. Il contenuto viene parsato con stripping eventuale fence markdown.
+Implementazione: prompt di sistema in italiano che impone JSON `{ "posts": { ... } }`. OpenAI usa `response_format: json_object` quando `provider === "openai"`; in caso di errore HTTP 400 può essere ritentato senza JSON mode. Il contenuto viene parsato con stripping eventuale fence markdown.
 
 ### `POST /ai-models`
 

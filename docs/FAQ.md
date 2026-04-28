@@ -65,6 +65,12 @@ Sì, se espongono un’API **compatibile OpenAI** (`/v1/chat/completions`). In I
 
 ---
 
+### Il menu «Modello» in Impostazioni è vuoto o sbagliato
+
+Serve il **bridge avviato** e una **chiave IA** valida (nel form o in `plotino.env`) affinché «Aggiorna dall’API» possa elencare i modelli. All’**avvio** si propone comunque un elenco **statico** per il provider scelto; al **cambio provider** l’elenco si aggiorna subito a quello tipico per la rete selezionata.
+
+---
+
 ### Come resetto la configurazione nell’app?
 
 Cancellazione manuale dai DevTools del browser: `Application` → `Local Storage` → chiavi che iniziano con `plotino-`. In alternativa usa una finestra anonima per prove pulite.

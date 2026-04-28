@@ -16,7 +16,7 @@ cp plotino.env.example plotino.env   # opzionale: configura chiavi e segreti
 ./start.sh
 ```
 
-Si apre (su macOS) il browser su `http://127.0.0.1:5500/`. Il bridge ascolta di default su `http://127.0.0.1:8787` (`POST /publish`, `POST /generate`).
+Si apre (su macOS) il browser su `http://127.0.0.1:5500/`. Il bridge ascolta di default su `http://127.0.0.1:8787` (`POST /publish`, `POST /generate`, `POST /ai-models`).
 
 Variabili utili: `HTTP_PORT`, `BRIDGE_PORT`, `SKIP_BRIDGE=1`, `OPEN_BROWSER=0`.
 

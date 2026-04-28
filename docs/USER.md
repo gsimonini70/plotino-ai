@@ -5,7 +5,8 @@
 - **Concentratore**: un solo campo dove descrivi **argomento o brief** (anche informale o a elenco puntato).
 - **Media**: puoi allegare **immagini** e **video** (anteprima in galleria); alcune piattaforme ne tengono conto nei suggerimenti o nella generazione IA.
 - **Piattaforme**: selezioni con le checkbox quali reti preparare tra X, Instagram, LinkedIn, Facebook, TikTok, YouTube.
-- Per ogni rete compare un **post ottimizzato** (lunghezze e convenzioni tipiche), **suggerimenti** e **hashtag** adeguati alla piattaforma (in modalità solo adattamento locale).
+- **Colonna «Post ottimizzati»**: per ogni social selezionato compare una **scheda** con **titolo chiaro** (nome della rete, es. «Instagram», «X (Twitter)»), poi badge descrittivo, contatore caratteri, pulsanti copia e il testo del post.
+- Per ogni rete hai un **post ottimizzato** (lunghezze e convenzioni tipiche), **suggerimenti** e **hashtag** adeguati alla piattaforma (in modalità solo adattamento locale).
 
 Due modalità di contenuto nei riquadri:
 
@@ -30,7 +31,8 @@ Due modalità di contenuto nei riquadri:
 
 - Richiede il **bridge** in esecuzione (`./start.sh` o solo `python3 bridge/publish_server.py`) e una **chiave IA** valida.
 - La chiave può stare in **`plotino.env`** sul computer (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, ecc.) oppure nel **form Impostazioni** (meno sicuro se il browser è condiviso).
-- In **Impostazioni** scegli **provider** (OpenAI, compatibile OpenAI, Anthropic), **modello** ed eventualmente **URL base** per API compatibili OpenAI.
+- In **Impostazioni** scegli **provider** (OpenAI, compatibile OpenAI, Anthropic): il **menu Modello** si aggiorna con un elenco tipico per quel provider; puoi **Aggiorna dall’API** per caricare l’elenco reale dal bridge (`POST /ai-models`, chiave sul bridge o nel form). Opzione **«Altro (manuale)»** per un id modello personalizzato.
+- Campi **URL base API** (solo compatibile OpenAI) e **chiave IA** opzionale come prima.
 - L’IA usa le piattaforme **attualmente selezionate** nella colonna di destra e il contesto sul numero di immagini/video caricati.
 
 Per tornare alle bozze Plotino senza testo IA: **Adattamento locale**.
@@ -49,7 +51,7 @@ Per tornare alle bozze Plotino senza testo IA: **Adattamento locale**.
 
 - **URL bridge**: deve coincidere con host/porta del server Python (es. `http://127.0.0.1:8787`).
 - **Chiave condivisa**: opzionale; se imposti `PUBLISH_SECRET` nel bridge, usa la stessa stringa nell’app.
-- **IA**: provider, modello, URL base (compatibile OpenAI), chiave opzionale.
+- **IA**: provider; **modello** (menu + aggiornamento da API); URL base (compatibile OpenAI); chiave opzionale.
 - **Piattaforme**: puoi disabilitare reti che non usi (non compariranno nei checkbox).
 
 La configurazione è salvata nel **browser** (`localStorage`), non sul server.
